@@ -1,77 +1,57 @@
 
-import { window } from '@angular/platform-browser/src/facade/browser';
-import { Json } from '@angular/platform-browser/src/facade/lang';
+import PNotify from 'pnotify';
+import 'pnotify/dist/pnotify.css';
 
-const storageAvailable = (type) => {
-  try {
-    const storage = window[type];
-    const test = '__storage_test__';
-    storage.setItem(test, test);
-    storage.removeItem(test);
-    return true;
-  }
-  catch(e) {
-    return false;
-  }
-};
-
-const buildProxy = (type, { prefix, serialize }) => {
-  const service = window[type];
-
-  const proxyData = {
-    get: (target, key) => {
-
-      // || null to prevent undefined errors
-      return serialize.parse(target[`${prefix}-${key}`] || null);
-    },
-
-    set: (target, key, value) => {
-      return target[`${prefix}-${key}`] = serialize.stringify(value);
-    }
-  };
-
-  return new Proxy(service, proxyData);
-};
-
-export class StorageSettings {
+export class PNotifySettings {
   constructor() {}
 }
 
-
-export class StorageService {
+export class PNotifyService {
   static get parameters() {
-    return [[StorageSettings]];
+    return [[PNotifySettings]];
   }
 
-  constructor(storageSettings) {
-    this.storageSettings = Object.assign({ prefix: 'ng2-storage', serialize: Json }, storageSettings);
-    if(typeof this.storageSettings.prefix === 'undefined') {
-      throw new Error('storageSettings.prefix must be a string');
+  constructor(settings) {
+    this.pnotifySettings = Object.assign({ styling: 'brighttheme' }, settings);
+
+    if(typeof this.pnotifySettings.styling === 'undefined') {
+      throw new Error('pnotifySettings.styling must be a string');
     }
 
-    if(!this.storageSettings.serialize) {
-      throw new Error('storageSettings.serialize must be an object { stringify, parse }');
-    }
+    this.isDesktop = false;
+  }
 
-    if(typeof this.storageSettings.serialize.stringify !== 'function') {
-      throw new Error('storageSettings.serialize.stringify must be a function');
-    }
+  desktop() {
+    PNotify.desktop.permission();
+    this.isDesktop = true;
+  }
 
-    if(typeof this.storageSettings.serialize.parse !== 'function') {
-      throw new Error('storageSettings.serialize.parse must be a function');
+  pnotify(opts) {
+    opts.styling = this.pnotifySettings.styling;
+    if(this.isDesktop) {
+      opts.desktop = opts.desktop || {};
+      opts.desktop.desktop = true;
     }
+    return new PNotify(opts);
+  }
 
-    if(!storageAvailable('localStorage')) {
-      console.warn('localStorage is not available!');
-    } else {
-      this.local = buildProxy('localStorage',   this.storageSettings);
-    }
+  success(opts) {
+    opts.type = 'success';
+    return this.pnotify(opts);
+  }
 
-    if(!storageAvailable('sessionStorage')) {
-      console.warn('sessionStorage is not available!');
-    } else {
-      this.session = buildProxy('sessionStorage', this.storageSettings);
-    }
+  notice(opts) {
+    opts.type = 'notice';
+    return this.pnotify(opts);
+  }
 
+  error(opts) {
+    opts.type = 'error';
+    return this.pnotify(opts);
+  }
+
+  info(opts) {
+    opts.type = 'info';
+    return this.pnotify(opts);
   }
 }

@@ -1,45 +1,40 @@
-# ng2-storage
-A service wrapping local and session storage for ng2.
+# ng2-pnotify
+A service wrapping [PNotify](https://github.com/sciactive/pnotify) for ng2.
 
 # Install
-`npm i -s ng2-storage`
-
-# Browser Support
-This library makes heavy use of [ES6 Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy), meaning it only has support in the latest Edge, Chrome, Firefox, and Opera.
+`npm i -s ng2-pnotify`
 
 # Usage
 First, bootstrap the service globally:
 
 ```js
-import { StorageSettings } from 'ng2-storage';
+import { PNotifySettings } from 'ng2-pnotify';
 
 bootstrap(App, [
-  provide(StorageSettings, { useValue: { prefix: 'ng2-storage' } })
+  provide(PNotifySettings, { useValue: { styling: 'bootstrap3' } }) // defaults to 'brighttheme'
 ]);
 ```
 
 Next, inject it into a component:
 ```js
-import { StorageService } from 'ng2-storage';
+import { PNotifyService } from 'ng2-pnotify';
 
 @Component({
-  providers: [StorageService],
-  template: `<button (click)="incrementStoredData()">click</button>`
+  providers: [PNotifyService],
+  template: `<button (click)="notify()">click</button>`
 })
 export class MyComponent {
 
   static get parameters() {
-    return [[StorageService]];
+    return [[PNotifyService]];
   }
 
-  constructor(storage) {
-    // you can also use storage.session for sessionStorage
-    this.storage = storage.local;
+  constructor(pnotify) {
+    this.pnotify = pnotify;
   }
 
-  incrementStoredData() {
-    this.storage.data = this.storage.data || 0;
-    this.storage.data++;
+  notify() {
+    this.pnotify.info({ text: 'hello!' });
   }
 }
 ```
@@ -47,5 +42,18 @@ export class MyComponent {
 # Options
 Name      | Default       | Description
 ----      | -------       | -----------
-prefix    | 'ng2-storage' | The key prefix when assigning data to local or session storage.
-serialize | window.JSON   | Used when de/serializing data from the storage container. Both `serialize` and `parse` attributes must be specified and must be functions if you want custom ones.
+styling   | 'brighttheme' | The theme for pnotify to use. Valid settings are 'brighttheme', 'jqueryui', 'fontawesome', 'bootstrap3' - you must have the corresponding CSS for each of these.
+
+# Functions
+
+Name      | Description
+----      | -----------          
+success   | Creates a success dialog.
+notice    | Creates a notice dialog.
+error     | Creates an error dialog.
+info      | Creates an info dialog.
+pnotify   | Creates a custom dialog.
+desktop   | Requests permission to use desktop mode.
+
+# TODO
+Wrappers for more functions, like prompts, modals, confirms.

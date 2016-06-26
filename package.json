@@ -1,10 +1,10 @@
 {
-  "name": "ng2-storage",
-  "version": "0.0.2",
-  "description": "A service wrapping local and session storage for angular2.",
+  "name": "ng2-pnotify",
+  "version": "0.0.1",
+  "description": "A service wrapping pnotify for angular2.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "babel src/index.js -o index.js --plugins transform-decorators-legacy --presets es2015"
   },
   "repository": {
     "type": "git",
@@ -13,25 +13,24 @@
   "keywords": [
     "ng2",
     "angular2",
-    "localstorage",
-    "sessionstorage",
-    "storage",
-    "ng2-storage",
-    "angular2-storage"
+    "pnotify",
+    "pines notify",
+    "notification"
   ],
   "author": "Kyle Kemp <kyle@seiyria.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/seiyria/ng2-storage/issues"
+    "url": "https://github.com/seiyria/ng2-pnotify/issues"
   },
-  "scripts": {
-    "compile": "babel src/index.js -o index.js --presets es2015"
-  },
-  "homepage": "https://github.com/seiyria/ng2-storage#readme",
+  "homepage": "https://github.com/seiyria/ng2-pnotify#readme",
   "peerDependencies": {
     "@angular/platform-browser": "2.0.0-rc.1"
   },
   "devDependencies": {
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.9.0"
+  },
+  "dependencies": {
+    "pnotify": "^3.0.0"
   }
 }

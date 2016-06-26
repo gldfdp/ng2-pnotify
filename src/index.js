@@ -1,6 +1,8 @@
 
 import PNotify from 'pnotify';
 import 'pnotify/dist/pnotify.css';
+import 'pnotify/dist/pnotify.buttons.js';
+import 'pnotify/dist/pnotify.buttons.css';
 
 export class PNotifySettings {
   constructor() {}
